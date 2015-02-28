@@ -11,11 +11,3 @@ import (
 const (
 
 )
-
-func GetDates(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(res, "")
-}
-
-func GetIndex(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprint(res, "Nothing to see here")
-}

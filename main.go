@@ -9,6 +9,8 @@ import (
 	"log"
 	"bytes"
 	"github.com/gorilla/mux"
+	_ "github.com/gorilla/handlers"
+	_ "github.com/gorilla/sessions"
 	"github.com/mitchellh/goamz/aws"
 	"github.com/mitchellh/goamz/s3"
 )
@@ -44,11 +46,14 @@ func main() {
 
 	http.Handle("/", r)
 
+	stop := CheckAtInterval()
+	defer func() {stop <- true}()
+
 	fmt.Println("Server running at port",Port)
 	http.ListenAndServe(Port, nil)
 }
 
-func CheckAtInterval() <-chan bool {
+func CheckAtInterval() chan bool {
 	ticker := time.NewTicker(time.Duration(UpdateCycle) * time.Second)
 	quit := make(chan bool)
 
@@ -70,6 +75,8 @@ func fetchImage() *Image {
 
 	time := time.Now().Unix()
 	// filename,err := os.Create(string(time))
+
+	fmt.Println("Fetching image",time)
 
 	check := http.Client{
 		CheckRedirect: func(r *http.Request, via []*http.Request) error {
@@ -127,4 +134,13 @@ func getBucket()  []s3.Key {
 
 func getDay() {
 
+}
+
+
+func GetDates(res http.ResponseWriter, req *http.Request) {
+	fmt.Fprintf(res, "")
+}
+
+func GetIndex(res http.ResponseWriter, req *http.Request) {
+	fmt.Fprint(res, "Nothing to see here")
 }
